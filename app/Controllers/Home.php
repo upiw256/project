@@ -32,7 +32,15 @@ class Home extends BaseController
 		} elseif ($cekuser == null && $password == null) {
 			echo "Username dan Password salah";
 		} else {
-			echo "BERHASIL";
+			// echo "BERHASIL";
+			$session = \Config\Services::session();
+			$data = [
+				'username' => $cekuser['username'],
+				'nama' => $cekuser['nama_user'],
+				'email' => $cekuser['email'],
+				'role' => $cekuser['role'],
+			];
+			$session->set($data);
 		}
 	}
 
