@@ -1,3 +1,7 @@
+<?php
+$session = session();
+$username = $session->get('nama_user');
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -39,7 +43,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
         <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span class="brand-text font-weight-light"><?= $username ?></span>
       </a>
 
       <!-- Sidebar -->

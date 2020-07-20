@@ -34,7 +34,7 @@
             <?= session()->getFlashdata('pesan') ?>
           </div>
         <?php endif ?>
-        <form action="home/cek" method="post">
+        <form action="admin/cek" method="post">
           <?= csrf_field(); ?>
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" placeholder="Username">
