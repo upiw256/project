@@ -29,7 +29,11 @@
     <div class="card">
       <div class="card-body login-card-body">
         <p class="login-box-msg">{{nama sekolah}}</p>
-
+        <?php if (session()->getFlashdata('pesan')) : ?>
+          <div class="alert alert-danger" role="alert">
+            <?= session()->getFlashdata('pesan') ?>
+          </div>
+        <?php endif ?>
         <form action="home/cek" method="post">
           <?= csrf_field(); ?>
           <div class="input-group mb-3">

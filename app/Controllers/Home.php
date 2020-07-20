@@ -20,30 +20,25 @@ class Home extends BaseController
 	}
 	public function cek()
 	{
+		$session = \Config\Services::session();
 		$user = new M_login();
 		$username = $this->request->getVar('username');
 		$password = $this->request->getVar('password');
 		$cekuser = $user->where('username', $username)->first();
 		$cekpass = $user->where('password', $password)->first();
 		if ($cekuser == null) {
-			echo "username salah";
+			$session->setFlashdata('pesan', 'Username Salah');
+			return redirect()->to('/login');
 		} elseif ($cekpass == null) {
-			echo "Password salah";
+			$session->setFlashdata('pesan', 'Password Salah');
+			return redirect()->to('/login');
 		} elseif ($cekuser == null && $password == null) {
-			echo "Username dan Password salah";
+			$session->setFlashdata('pesan', 'Username dan Password Salah');
+			return redirect()->to('/login');
 		} else {
-			// echo "BERHASIL";
-			$session = \Config\Services::session();
-			$data = [
-				'username' => $cekuser['username'],
-				'nama' => $cekuser['nama_user'],
-				'email' => $cekuser['email'],
-				'role' => $cekuser['role'],
-			];
-			$session->set($data);
+			return redirect()->to('/admin');
 		}
 	}
-
 	//--------------------------------------------------------------------
 
 }
