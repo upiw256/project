@@ -15,20 +15,20 @@ class Admin extends BaseController
   }
   public function cek()
   {
-    $session = \Config\Services::session();
+    //$session = \Config\Services::session();
     $user = new M_login();
     $username = $this->request->getVar('username');
     $password = $this->request->getVar('password');
     $cekuser = $user->where('username', $username)->first();
     $cekpass = $user->where('password', $password)->first();
     if ($cekuser == null) {
-      $session->setFlashdata('pesan', 'Username Salah');
+      session()->setFlashdata('pesan', 'Username Salah');
       return redirect()->to('/login');
     } elseif ($cekpass == null) {
-      $session->setFlashdata('pesan', 'Password Salah');
+      session()->setFlashdata('pesan', 'Password Salah');
       return redirect()->to('/login');
     } elseif ($cekuser == null && $password == null) {
-      $session->setFlashdata('pesan', 'Username dan Password Salah');
+      session()->setFlashdata('pesan', 'Username dan Password Salah');
       return redirect()->to('/login');
     } else {
       $data = [
@@ -38,9 +38,14 @@ class Admin extends BaseController
         'email' => $cekuser["email"],
         'role' => $cekuser["role"],
       ];
-      $session->set($data);
+      session()->set($data);
       return redirect()->to('/admin');
     }
+  }
+  public function logout()
+  {
+    session()->destroy();
+    return redirect()->to('/login');
   }
 
   //--------------------------------------------------------------------
