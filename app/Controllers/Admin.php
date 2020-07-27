@@ -10,12 +10,14 @@ class Admin extends BaseController
   {
     if (session()->get('nama_user') == null) {
       return redirect()->to("/login");
+    } else if (session()->get('role') == 1) {
+      return view('admin');
+    } else if (session()->to('role') == 2) {
+      return redirect()->to('/author');
     }
-    return view('admin');
   }
   public function cek()
   {
-    //$session = \Config\Services::session();
     $user = new M_login();
     $username = $this->request->getVar('username');
     $password = $this->request->getVar('password');
