@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use M_login;
+use M_kepsek;
+use M_post;
 
 class Admin extends BaseController
 {
@@ -34,6 +36,7 @@ class Admin extends BaseController
       return redirect()->to('/login');
     } else {
       $data = [
+        'id_user' => $cekuser['id_user'],
         'username' => $cekuser["username"],
         'password' => $cekuser["password"],
         'nama_user' => $cekpass["nama_user"],
@@ -44,10 +47,45 @@ class Admin extends BaseController
       return redirect()->to('/admin');
     }
   }
+  public function menu()
+  {
+    if (session()->get('nama_user') == null) {
+      return redirect()->to("/login");
+    } else if (session()->get('role') == 1) {
+      echo view("admin/header.php");
+      echo view("admin/menu.php");
+      echo view("admin/new_menu.php");
+      echo view("admin/footer.php");
+      echo view("admin/js.php");
+    } else if (session()->to('role') == 2) {
+      return redirect()->to('/author');
+    }
+  }
   public function logout()
   {
     session()->destroy();
-    return redirect()->to('/login');
+    return redirect()->to(base_url());
+  }
+  public function input_menu()
+  {
+    $post = new M_post();
+    date_default_timezone_set("Asia/Jakarta");
+    $author = session()->get('id_user');
+    $tanggal = date("d/m/Y");
+    $judul = $this->request->getVar('judul');
+    $slug = url_title($judul, '-', true);
+    $isi = $this->request->getVar('isi');
+    $data = [
+      'id_user' => intval($author),
+      'slug' => $slug,
+      'judul' => $judul,
+      'isi' => $isi,
+      'tgl_buat' => $tanggal
+    ];
+    $db = \Config\Database::connect();
+    $page = $db->query("INSERT INTO `page`(`id_user`, `slug`, `judul`, `isi_page`, `tgl_buat`) VALUES (" . $author . ",'" . $slug . "','" . $judul . "','" . $isi . "','" . $tanggal . "')");
+    $page->getResult();
+    return redirect()->to(base_url("admin/menu"));
   }
 
   //--------------------------------------------------------------------
