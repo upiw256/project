@@ -19,10 +19,21 @@
             <li class="nav-item">
               <a href="<?= base_url() ?>" class="nav-link">Home</a>
             </li>
-            <?php foreach ($nav as $n) : ?>
-              <li class="nav-item">
-                <a href="<?= base_url("/home/page/" . $n->slug) ?>" class="nav-link text-uppercase"><?= $n->judul ?></a>
-              </li>
+            <?php foreach ($sub as $s) :
+              if ($s->sub == 'false') { ?>
+                <li class="nav-item">
+                  <a href="<?= base_url("/home/page/" . $s->slug) ?>" class="nav-link text-uppercase"><?= $s->judul ?></a>
+                </li>
+              <?php } else { ?>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-uppercase" href="<?= base_url("/home/page/" . $s->slug) ?>" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <?= $s->judul ?>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="<?= base_url("/home/page/" . $s->slug_sub) ?>"><?= $s->judul_sub_menu ?></a>
+                  </div>
+                </li>
+              <?php } ?>
             <?php endforeach ?>
           </ul>
 
@@ -62,6 +73,14 @@
                 </marquee>
               </h1>
             </div>
+            <?php if (session()->getFlashdata('pesan')) :
+            ?>
+              <div class="alert alert-danger col-12" role="alert">
+                <?php session()->getFlashdata('pesan')
+                ?>
+              </div>
+            <?php endif
+            ?>
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>

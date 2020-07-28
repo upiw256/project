@@ -42,21 +42,21 @@
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="<?= base_url("/admin/menu") ?>" class="nav-link active">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Active Page</p>
+                      <i class="fab fa-elementor nav-icon"></i>
+                      <p>Tambah Menu</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Inactive Page</p>
+                    <a href="<?= base_url("/admin/subMenu") ?>" class="nav-link">
+                      <i class="fab fa-elementor nav-icon"></i>
+                      <p>Tambah Sub Menu</p>
                     </a>
                   </li>
                 </ul>
               </li>
               <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <i class="nav-icon fas fa-sliders-h"></i>
                   <p>
                     Setting
                     <i class="right fas fa-angle-left"></i>
@@ -105,7 +105,7 @@
             <?php } ?>
             <li class="nav-item">
               <a href="<?= base_url("admin/logout") ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="fas fa-sign-out-alt nav-icon"></i>
                 <p>Lougout</p>
               </a>
             </li>
