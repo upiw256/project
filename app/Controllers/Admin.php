@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use M_login;
-use M_kepsek;
 use M_post;
 
 class Admin extends BaseController
@@ -12,10 +11,8 @@ class Admin extends BaseController
   {
     if (session()->get('nama_user') == null) {
       return redirect()->to("/login");
-    } else if (session()->get('role') == 1) {
+    } else {
       return view('admin');
-    } else if (session()->to('role') == 2) {
-      return redirect()->to('/author');
     }
   }
   public function cek()
@@ -83,10 +80,53 @@ class Admin extends BaseController
       'tgl_buat' => $tanggal
     ];
     $db = \Config\Database::connect();
-    $page = $db->query("INSERT INTO `page`(`id_user`, `slug`, `judul`, `isi_page`, `tgl_buat`) VALUES (" . $author . ",'" . $slug . "','" . $judul . "','" . $isi . "','" . $tanggal . "')");
-    $page->getResult();
+    $page = $db->query("INSERT INTO `page`(`id_user`, `slug`, `judul`, `isi_page`, `tgl_buat`,`sub`) VALUES (" . $author . ",'" . $slug . "','" . $judul . "','" . $isi . "','" . $tanggal . "','false')");
+    $hasil = $db->query("SELECT COUNT(*) AS 'page' FROM `page`");
+    $count = $hasil->getResult();
+    if ($count > 10) {
+      session()->setFlashdata('pesan', 'Menu sudah penuh');
+    } else {
+      $page->getResult();
+    }
     return redirect()->to(base_url("admin/menu"));
   }
+  public function subMenu()
+  {
+    if (session()->get('nama_user') == null) {
+      return redirect()->to("/login");
+    } else if (session()->get('role') == 1) {
+      $db = \Config\Database::connect();
+      $hasil = $db->query("SELECT * FROM `page`");
+      $page = $hasil->getResult();
+      $data = [
+        'page' => $page
+      ];
+      echo view("admin/header.php");
+      echo view("admin/menu.php");
+      echo view("admin/sub_menu.php", $data);
+      echo view("admin/footer.php");
+      echo view("admin/js.php");
+    } else if (session()->to('role') == 2) {
+      return redirect()->to('/author');
+    }
+
+    # SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)
+  }
+  public function input_subMenu()
+  {
+    $db = \Config\Database::connect();
+    $id_page = $this->request->getVar('id_page');
+    $judul_sub = $this->request->getVar('judul');
+    $isi = $this->request->getVar('isi');
+    $slug_sub = url_title($judul_sub, '-', true);
+    $page = $db->query("INSERT INTO `sub_menu`(`id_page`, `judul_sub_menu`,`isi_sub_menu`, `slug_sub`) VALUES (" . $id_page . ",'" . $judul_sub . "','" . $isi . "','" . $slug_sub . "')");
+    $page_edit = $db->query("UPDATE `page` SET `sub` = 'true' WHERE `id_page` = " . $id_page);
+    //dd($page_edit);
+    $page_edit->getResult();
+    $page->getResult();
+    return redirect()->to(base_url("admin/subMenu"));
+  }
+
 
   //--------------------------------------------------------------------
 

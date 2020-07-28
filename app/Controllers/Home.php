@@ -13,9 +13,11 @@ class Home extends BaseController
 	{
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post INNER JOIN kepsek ON post.id_kepsek = kepsek.id_kepsek ORDER BY kepsek.id_kepsek DESC LIMIT 1");
-		$queryNav = $db->query("SELECT * FROM page ");
+		$queryNav = $db->query("SELECT * FROM page");
+		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)");
 		$kepsek = $query->getResult();
 		$hasilNav = $queryNav->getResult();
+		$hasilSub = $querySub->getResult();
 		$BeritaModel = new M_home();
 		// $kepsekModel = new M_kepsek();
 		// $kepsek = $kepsekModel->getKepsek();
@@ -25,7 +27,8 @@ class Home extends BaseController
 		$data = [
 			'berita' => $berita,
 			'kepsek' => $kepsek,
-			'nav' => $hasilNav
+			'nav' => $hasilNav,
+			'sub' => $hasilSub,
 		];
 		echo view('berita/head');
 		echo view('berita/navbar', $data);
@@ -43,12 +46,18 @@ class Home extends BaseController
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM page WHERE slug ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
+		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) ");
+		$querySubIsi = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) WHERE sub_menu.slug_sub = '" . $page . "' ");
+		$hasilSubisi = $querySubIsi->getResult();
 		$hasil = $query->getResult();
 		$hasilNav = $queryNav->getResult();
+		$hasilSub = $querySub->getResult();
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
-			'nav' => $hasilNav
+			'nav' => $hasilNav,
+			'sub' => $hasilSub,
+			'isiSub' => $hasilSubisi
 		];
 		echo view('berita/head');
 		echo view('berita/navbar', $data);
@@ -62,12 +71,15 @@ class Home extends BaseController
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post WHERE id_post ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
+		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) ");
 		$hasil = $query->getResult();
 		$hasilNav = $queryNav->getResult();
+		$hasilSub = $querySub->getResult();
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
-			'nav' => $hasilNav
+			'nav' => $hasilNav,
+			'sub' => $hasilSub
 		];
 		if ($hasil == null) {
 			echo view('errors/html/error_404');
