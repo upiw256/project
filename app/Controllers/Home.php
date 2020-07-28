@@ -14,7 +14,7 @@ class Home extends BaseController
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post INNER JOIN kepsek ON post.id_kepsek = kepsek.id_kepsek ORDER BY kepsek.id_kepsek DESC LIMIT 1");
 		$queryNav = $db->query("SELECT * FROM page");
-		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)");
+		$querySub = $db->query("SELECT * FROM ((sub_menu RIGHT JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)");
 		$kepsek = $query->getResult();
 		$hasilNav = $queryNav->getResult();
 		$hasilSub = $querySub->getResult();

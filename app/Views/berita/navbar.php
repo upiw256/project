@@ -19,21 +19,23 @@
             <li class="nav-item">
               <a href="<?= base_url() ?>" class="nav-link">Home</a>
             </li>
-            <?php foreach ($sub as $s) :
-              if ($s->sub == 'false') { ?>
+            <?php foreach ($sub as $n) :
+              if ($n->sub == 'false') { ?>
                 <li class="nav-item">
-                  <a href="<?= base_url("/home/page/" . $s->slug) ?>" class="nav-link text-uppercase"><?= $s->judul ?></a>
+                  <a href="<?= base_url("/home/page/" . $n->slug) ?>" class="nav-link text-uppercase"><?= $n->judul ?></a>
                 </li>
               <?php } else { ?>
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-uppercase" href="<?= base_url("/home/page/" . $s->slug) ?>" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?= $s->judul ?>
+                  <a class="nav-link dropdown-toggle text-uppercase" href="<?= base_url("/home/page/" . $n->slug) ?>" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <?= $n->judul ?>
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="<?= base_url("/home/page/" . $s->slug_sub) ?>"><?= $s->judul_sub_menu ?></a>
+                    <a class="dropdown-item" href="<?= base_url("/home/page/" . $n->slug_sub) ?>"><?= $n->judul_sub_menu ?></a>
                   </div>
                 </li>
-              <?php } ?>
+              <?php }
+              ?>
+
             <?php endforeach ?>
           </ul>
 
