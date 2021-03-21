@@ -141,6 +141,31 @@ class Admin extends BaseController
     }
   }
 
+  public function input_berita()
+  {
+    $db = \Config\Database::connect();
+    $id_user = session()->get('id_user');
+    $judul = $this->request->getVar('judul');
+    $isi = $this->request->getVar('isi');
+    $img = $this->request->getFile('gambar');
+    if ($img->getMimeType() != "image/jpeg" xor $img->getMimeType() != "image/jpg" xor $img->getMimeType() != "image/png") {
+      session()->setFlashdata('pesan', 'file bukan gambar');
+      return redirect()->to('/admin/berita');
+    } elseif ($img->getSize() > 1000000) {
+      session()->setFlashdata('pesan', 'gambar melebihi 1mb');
+      return redirect()->to('/admin/berita');
+    } else {
+      date_default_timezone_set('Asia/Bangkok');
+      $date = date("d/m/Y");
+      $img->move('img');
+      $img_url = 'img/' . $img->getName();
+      $db->query("INSERT INTO `post`(`id_user`, `id_kepsek`,`judul`, `isi`,`icon`,`gambar`,`tgl_buat`,`tgl_ubah`) VALUES (" . $id_user . ", 1 ,'" . $judul . "','" . $isi . "','" . $img_url . "','" . $img_url . "','" . $date . "','" . $date . "')");
+      session()->setFlashdata('pesan', 'Berita berhasil ditambahkan');
+      return redirect()->to('/admin/berita');
+    }
+    // dd($img);
+  }
+
   //--------------------------------------------------------------------
 
 }

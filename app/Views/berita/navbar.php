@@ -69,8 +69,10 @@
             <div class="col-10">
               <h1 class="m-0 text-dark">
                 <marquee scrolldelay="100" class="navbar navbar-expand-md navbar-light navbar-secondary text-white">
-                  <?php foreach ($berita as $b) : ?>
-                    <img class="card-img-top" src="<?= base_url($b['icon']) ?>" style="width: 50px; height: 50px;" alt="Card image cap"> <?= $b['judul'] ?> |
+                  <?php foreach ($runtext as $b) : ?>
+                    <a href="/home/berita/<?= $b['id_post'] ?>" class="text-light">
+                      <img class="card-img-top" src="<?= base_url($b['icon']) ?>" style="width: 50px; height: 50px;" alt="Card image cap"> <?= $b['judul'] ?> |
+                    </a>
                   <?php endforeach ?>
                 </marquee>
               </h1>

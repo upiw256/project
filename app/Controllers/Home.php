@@ -24,8 +24,10 @@ class Home extends BaseController
 		// $datakepsek = $this->db->table('post')->select('*')->join('kepsek', 'kepsek.id_kepsek = post.id_post')->get();
 		//dd($kepsek);
 		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
+		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$data = [
 			'berita' => $berita,
+			'runtext' => $runtext,
 			'kepsek' => $kepsek,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub,
@@ -37,12 +39,17 @@ class Home extends BaseController
 	}
 	public function login()
 	{
-		echo view('login');
+		if (session()->get('nama_user') == null) {
+			echo view('login');
+		} else {
+			return redirect()->to("/admin");
+		}
 	}
 	public function page($page = '')
 	{
 		$BeritaModel = new M_home();
 		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
+		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM page WHERE slug ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
@@ -55,6 +62,7 @@ class Home extends BaseController
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
+			'runtext' => $runtext,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub,
 			'isiSub' => $hasilSubisi
@@ -68,6 +76,7 @@ class Home extends BaseController
 	{
 		$BeritaModel = new M_home();
 		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
+		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post WHERE id_post ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
@@ -78,6 +87,7 @@ class Home extends BaseController
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
+			'runtext' => $runtext,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub
 		];

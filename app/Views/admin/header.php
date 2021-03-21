@@ -23,10 +23,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script>
     tinymce.init({
       selector: 'textarea',
-      plugins: "image link table",
+      plugins: "link table",
       menubar: "insert",
-      images_upload_url: 'postAcceptor.php',
-      automatic_uploads: false,
     });
   </script>
 </head>
