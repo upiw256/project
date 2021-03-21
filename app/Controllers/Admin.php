@@ -126,7 +126,20 @@ class Admin extends BaseController
     $page->getResult();
     return redirect()->to(base_url("admin/subMenu"));
   }
-
+  public function berita()
+  {
+    if (session()->get('nama_user') == null) {
+      return redirect()->to("/login");
+    } else if (session()->get('role') == 2) {
+      echo view("admin/header.php");
+      echo view("admin/menu.php");
+      echo view("admin/author/tambah_berita.php");
+      echo view("admin/footer.php");
+      echo view("admin/js.php");
+    } else if (session()->to('role') == 1) {
+      return redirect()->to('/admin');
+    }
+  }
 
   //--------------------------------------------------------------------
 

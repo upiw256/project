@@ -41,7 +41,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="<?= base_url("/admin/menu") ?>" class="nav-link active">
+                    <a href="<?= base_url("/admin/menu") ?>" class="nav-link ">
                       <i class="fab fa-elementor nav-icon"></i>
                       <p>Tambah Menu</p>
                     </a>
@@ -66,13 +66,13 @@
                   <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Active Page</p>
+                      <p>Tambah akun</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Inactive Page</p>
+                      <p>Edit Profile</p>
                     </a>
                   </li>
                 </ul>
@@ -91,15 +91,10 @@
                   <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Active Page</p>
+                      <p>Tambah Berita</p>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Inactive Page</p>
-                    </a>
-                  </li>
+
                 </ul>
               </li>
             <?php } ?>
