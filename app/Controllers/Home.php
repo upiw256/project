@@ -11,6 +11,7 @@ class Home extends BaseController
 
 	public function index()
 	{
+		$pager = \Config\Services::pager();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post INNER JOIN kepsek ON post.id_kepsek = kepsek.id_kepsek ORDER BY kepsek.id_kepsek DESC LIMIT 1");
 		$queryNav = $db->query("SELECT * FROM page");
@@ -19,15 +20,23 @@ class Home extends BaseController
 		$hasilNav = $queryNav->getResult();
 		$hasilSub = $querySub->getResult();
 		$BeritaModel = new M_home();
+		$keyword = $this->request->getVar('berita');
+		$all = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		if ($keyword) {
+			$getBerita = $BeritaModel->cari($keyword);
+		} else {
+			$getBerita = $BeritaModel->orderBy('id_post', 'DESC');
+		}
 		// $kepsekModel = new M_kepsek();
 		// $kepsek = $kepsekModel->getKepsek();
 		// $datakepsek = $this->db->table('post')->select('*')->join('kepsek', 'kepsek.id_kepsek = post.id_post')->get();
 		//dd($kepsek);
-		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
-		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$data = [
-			'berita' => $berita,
-			'runtext' => $runtext,
+			'berita' => $getBerita->paginate(3, 'berita'),
+			'all' => $all,
+			'pager' => $BeritaModel->pager,
+			// 'runtext' => $runtext,
 			'kepsek' => $kepsek,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub,
@@ -48,8 +57,8 @@ class Home extends BaseController
 	public function page($page = '')
 	{
 		$BeritaModel = new M_home();
-		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
-		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM page WHERE slug ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
@@ -62,7 +71,7 @@ class Home extends BaseController
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
-			'runtext' => $runtext,
+			// 'runtext' => $runtext,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub,
 			'isiSub' => $hasilSubisi
@@ -75,8 +84,8 @@ class Home extends BaseController
 	public function berita($page = '')
 	{
 		$BeritaModel = new M_home();
-		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll(3);
-		$runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post WHERE id_post ='" . $page . "'");
 		$queryNav = $db->query("SELECT * FROM page ");
@@ -87,7 +96,7 @@ class Home extends BaseController
 		$data = [
 			'isi' => $hasil,
 			'berita' => $berita,
-			'runtext' => $runtext,
+			// 'runtext' => $runtext,
 			'nav' => $hasilNav,
 			'sub' => $hasilSub
 		];

@@ -20,7 +20,9 @@
             </div>
           </div>
         <?php endforeach ?>
+        <?= $pager->links('berita', 'berita_pagination') ?>
       </div>
+
       <!-- /.col-md-6 -->
       <div class="col-lg-3">
         <div class="card">

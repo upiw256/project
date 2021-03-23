@@ -40,9 +40,9 @@
           </ul>
 
           <!-- SEARCH FORM -->
-          <form class="form-inline ml-0 ml-md-3">
+          <form class="form-inline ml-0 ml-md-3" action="" method="post">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Cari Berita" aria-label="Search">
+              <input class="form-control form-control-navbar" type="search" placeholder="Cari Berita" aria-label="Search" name="berita">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -69,7 +69,7 @@
             <div class="col-10">
               <h1 class="m-0 text-dark">
                 <marquee scrolldelay="100" class="navbar navbar-expand-md navbar-light navbar-secondary text-white">
-                  <?php foreach ($runtext as $b) : ?>
+                  <?php foreach ($all as $b) : ?>
                     <a href="/home/berita/<?= $b['id_post'] ?>" class="text-light">
                       <img class="card-img-top" src="<?= base_url($b['icon']) ?>" style="width: 50px; height: 50px;" alt="Card image cap"> <?= $b['judul'] ?> |
                     </a>
