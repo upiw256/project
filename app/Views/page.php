@@ -1,4 +1,6 @@
 <?php
+$this->extend('template/home');
+$this->section('content');
 if ($isi == null) {
 	foreach ($isiSub as $i) :
 ?>
@@ -43,7 +45,7 @@ if ($isi == null) {
 	<?php
 	endforeach;
 }
-foreach ($isi as $i) :
+foreach ($isi->getResult() as $i) :
 	?>
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
@@ -85,5 +87,6 @@ foreach ($isi as $i) :
 		<!-- /.content -->
 	</div>
 	<!-- /.content-wrapper -->
-<?php endforeach
+<?php endforeach;
+$this->endSection();
 ?>

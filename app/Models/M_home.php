@@ -10,6 +10,6 @@ class M_home extends Model
 
   public function cari($keyword)
   {
-    return $this->table('post')->like('judul', $keyword)->orLike('isi', $keyword);
+    return $this->table('post')->like('judul', $keyword, 'both')->orLike('isi', $keyword, 'both');
   }
 }

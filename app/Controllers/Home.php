@@ -2,49 +2,35 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Debug\Toolbar\Collectors\Views;
 use M_home;
-use M_kepsek;
+use App\Models\M_page;
 
 class Home extends BaseController
 {
-
+	protected $page;
+	public function __construct()
+	{
+		$this->page = new M_page();
+	}
 	public function index()
 	{
-		$pager = \Config\Services::pager();
-		$db = \Config\Database::connect();
-		$query = $db->query("SELECT * FROM post INNER JOIN kepsek ON post.id_kepsek = kepsek.id_kepsek ORDER BY kepsek.id_kepsek DESC LIMIT 1");
-		$queryNav = $db->query("SELECT * FROM page");
-		$querySub = $db->query("SELECT * FROM ((sub_menu RIGHT JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)");
-		$kepsek = $query->getResult();
-		$hasilNav = $queryNav->getResult();
-		$hasilSub = $querySub->getResult();
 		$BeritaModel = new M_home();
-		$keyword = $this->request->getVar('berita');
 		$all = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		$keyword = $this->request->getVar('berita');
 		if ($keyword) {
 			$getBerita = $BeritaModel->cari($keyword);
 		} else {
 			$getBerita = $BeritaModel->orderBy('id_post', 'DESC');
 		}
-		// $kepsekModel = new M_kepsek();
-		// $kepsek = $kepsekModel->getKepsek();
-		// $datakepsek = $this->db->table('post')->select('*')->join('kepsek', 'kepsek.id_kepsek = post.id_post')->get();
-		//dd($kepsek);
-		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$data = [
 			'berita' => $getBerita->paginate(3, 'berita'),
 			'all' => $all,
 			'pager' => $BeritaModel->pager,
-			// 'runtext' => $runtext,
-			'kepsek' => $kepsek,
-			'nav' => $hasilNav,
-			'sub' => $hasilSub,
+			'kepsek' => parent::kepsek(),
+			'nav' => parent::menu(),
+			'sub' => parent::subMenu(),
 		];
-		echo view('berita/head');
-		echo view('berita/navbar', $data);
-		echo view('berita/content', $data);
-		echo view('berita/footer');
+		return view('content', $data);
 	}
 	public function login()
 	{
@@ -56,58 +42,52 @@ class Home extends BaseController
 	}
 	public function page($page = '')
 	{
-		$BeritaModel = new M_home();
-		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
-		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
-		$db = \Config\Database::connect();
-		$query = $db->query("SELECT * FROM page WHERE slug ='" . $page . "'");
-		$queryNav = $db->query("SELECT * FROM page ");
-		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) ");
-		$querySubIsi = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) WHERE sub_menu.slug_sub = '" . $page . "' ");
-		$hasilSubisi = $querySubIsi->getResult();
-		$hasil = $query->getResult();
-		$hasilNav = $queryNav->getResult();
-		$hasilSub = $querySub->getResult();
-		$data = [
-			'isi' => $hasil,
-			'berita' => $berita,
-			// 'runtext' => $runtext,
-			'nav' => $hasilNav,
-			'sub' => $hasilSub,
-			'isiSub' => $hasilSubisi
-		];
-		echo view('berita/head');
-		echo view('berita/navbar', $data);
-		echo view('page', $data);
-		echo view('berita/footer');
+
+		if ($page === "") {
+			return redirect()->to("/");
+		} else {
+
+			$BeritaModel = new M_home();
+
+			$this->page->where(['slug' => $page]);
+			$query = $this->page->get();
+			$this->page->select('*');
+			$this->page->join('sub_menu', 'page.id_page = sub_menu.id_page', 'inner');
+			$this->page->join('user', 'page.id_user = user.id_user', 'inner');
+			$this->page->where(['sub_menu.slug_sub' => $page]);
+
+			$querySubIsi = $this->page->get();
+			$all = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+			$data = [
+				'isi' => $query,
+				'all' => $all,
+				'nav' => parent::menu(),
+				'sub' => parent::subMenu(),
+				'isiSub' => $querySubIsi
+			];
+			echo view('page', $data);
+		}
 	}
 	public function berita($page = '')
 	{
+		if ($page === "") {
+			return redirect()->to("/");
+		}
 		$BeritaModel = new M_home();
 		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
-		// $runtext = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
 		$db = \Config\Database::connect();
 		$query = $db->query("SELECT * FROM post WHERE id_post ='" . $page . "'");
-		$queryNav = $db->query("SELECT * FROM page ");
-		$querySub = $db->query("SELECT * FROM ((sub_menu INNER JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user) ");
 		$hasil = $query->getResult();
-		$hasilNav = $queryNav->getResult();
-		$hasilSub = $querySub->getResult();
 		$data = [
 			'isi' => $hasil,
-			'berita' => $berita,
-			// 'runtext' => $runtext,
-			'nav' => $hasilNav,
-			'sub' => $hasilSub
+			'all' => $berita,
+			'nav' => parent::menu(),
+			'sub' => parent::subMenu(),
 		];
 		if ($hasil == null) {
 			echo view('errors/html/error_404');
 		} else {
-
-			echo view('berita/head');
-			echo view('berita/navbar', $data);
 			echo view('berita', $data);
-			echo view('berita/footer');
 		}
 	}
 

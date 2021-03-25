@@ -43,4 +43,22 @@ class BaseController extends Controller
 		// E.g.:
 		//$this->session = \Config\Services::session();
 	}
+	public function kepsek()
+	{
+		$db = \Config\Database::connect();
+		$query = $db->query("SELECT * FROM post INNER JOIN kepsek ON post.id_kepsek = kepsek.id_kepsek ORDER BY kepsek.id_kepsek DESC LIMIT 1");
+		return $query->getResult();
+	}
+	public function menu()
+	{
+		$db = \Config\Database::connect();
+		$queryNav = $db->query("SELECT * FROM page");
+		return $queryNav->getResult();
+	}
+	public function subMenu()
+	{
+		$db = \Config\Database::connect();
+		$querySub = $db->query("SELECT * FROM ((sub_menu RIGHT JOIN page ON page.id_page = sub_menu.id_page)INNER JOIN user ON page.id_user = user.id_user)");
+		return $querySub->getResult();
+	}
 }

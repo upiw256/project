@@ -1,3 +1,5 @@
+<?= $this->extend('template/home'); ?>
+<?= $this->section('content') ?>
 <?php foreach ($isi as $i) :
 ?>
   <!-- Content Wrapper. Contains page content -->
@@ -40,3 +42,4 @@
   <!-- /.content-wrapper -->
 <?php endforeach
 ?>
+<?= $this->endSection() ?>
