@@ -3,32 +3,32 @@
 namespace App\Controllers;
 
 use M_home;
-use App\Models\M_page;
+use M_kepsek;
 
 class Home extends BaseController
 {
-	protected $page;
+	protected $Berita;
+	protected $kepsek;
+
 	public function __construct()
 	{
-		$this->page = new M_page();
+		$this->Berita = new M_home();
+		$this->kepsek = new M_kepsek();
 	}
 	public function index()
 	{
-		$BeritaModel = new M_home();
-		$all = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
+		$all = $this->Berita->orderBy('id_post', 'DESC')->findAll();
 		$keyword = $this->request->getVar('berita');
 		if ($keyword) {
-			$getBerita = $BeritaModel->cari($keyword);
+			$getBerita = $this->Berita->cari($keyword);
 		} else {
-			$getBerita = $BeritaModel->orderBy('id_post', 'DESC');
+			$getBerita = $this->Berita->orderBy('id_post', 'DESC');
 		}
 		$data = [
 			'berita' => $getBerita->paginate(3, 'berita'),
 			'all' => $all,
-			'pager' => $BeritaModel->pager,
-			'kepsek' => parent::kepsek(),
-			'nav' => parent::menu(),
-			'sub' => parent::subMenu(),
+			'pager' => $this->Berita->pager,
+			'kepsek' => $this->kepsek->findAll(),
 		];
 		return view('content', $data);
 	}
@@ -40,57 +40,15 @@ class Home extends BaseController
 			return redirect()->to("/admin");
 		}
 	}
-	public function page($page = '')
+	public function berita($page)
 	{
-
-		if ($page === "") {
-			return redirect()->to("/");
-		} else {
-
-			$BeritaModel = new M_home();
-
-			$this->page->where(['slug' => $page]);
-			$query = $this->page->get();
-			$this->page->select('*');
-			$this->page->join('sub_menu', 'page.id_page = sub_menu.id_page', 'inner');
-			$this->page->join('user', 'page.id_user = user.id_user', 'inner');
-			$this->page->where(['sub_menu.slug_sub' => $page]);
-
-			$querySubIsi = $this->page->get();
-			$all = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
-			$data = [
-				'isi' => $query,
-				'all' => $all,
-				'nav' => parent::menu(),
-				'sub' => parent::subMenu(),
-				'isiSub' => $querySubIsi
-			];
-			echo view('page', $data);
-		}
-	}
-	public function berita($page = '')
-	{
-		if ($page === "") {
-			return redirect()->to("/");
-		}
-		$BeritaModel = new M_home();
-		$berita = $BeritaModel->orderBy('id_post', 'DESC')->findAll();
-		$db = \Config\Database::connect();
-		$query = $db->query("SELECT * FROM post WHERE id_post ='" . $page . "'");
-		$hasil = $query->getResult();
+		$all = $this->Berita->orderBy('id_post', 'DESC')->findAll();
 		$data = [
-			'isi' => $hasil,
-			'all' => $berita,
-			'nav' => parent::menu(),
-			'sub' => parent::subMenu(),
+			'all' => $all,
+			'isi' => $this->Berita->getWhere(['id_post' => $page])->getResult()
 		];
-		if ($hasil == null) {
-			echo view('errors/html/error_404');
-		} else {
-			echo view('berita', $data);
-		}
+		return view('berita', $data);
 	}
-
 	//--------------------------------------------------------------------
 
 }

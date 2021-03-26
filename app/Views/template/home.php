@@ -31,11 +31,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <div class="wrapper">
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <nav class="main-header navbar navbar-expand-md navbar-dark navbar-primary">
       <div class="container">
         <a href="<?= base_url() ?>" class="navbar-brand">
-          <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-          <span class="brand-text font-weight-light">AdminLTE 3</span>
+          <span class="brand-text font-weight-light"><b>SMAN 1 MARGAASIH</b></span>
         </a>
 
         <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,41 +47,56 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <li class="nav-item">
               <a href="<?= base_url() ?>" class="nav-link">Home</a>
             </li>
-            <?php foreach ($sub as $n) :
-            ?>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-uppercase" href="<?= base_url("/home/page/" . $n->slug) ?>" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <?= $n->judul ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="<?= base_url("/home/page/" . $n->slug_sub) ?>"><?= $n->judul_sub_menu ?></a>
-                </div>
-              </li>
-            <?php endforeach ?>
-            <?php foreach ($nav as $n) : ?>
-              <li class="nav-item">
-                <a href="<?= base_url() ?>" class="nav-link">Home</a>
-              </li>
-            <?php endforeach ?>
           </ul>
 
           <!-- SEARCH FORM -->
-          <form class="form-inline ml-0 ml-md-3" action="" method="post">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Cari Berita" aria-label="Search" name="berita">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </form>
         </div>
       </div>
+      <form class="form-inline mr-4 d-flex justify-content-end" action="" method="post">
+        <div class="input-group input-group-sm">
+          <input class="form-control form-control-navbar " type="search" placeholder="Cari Berita" aria-label="Search" name="berita">
+          <div class="input-group-append">
+            <button class="btn btn-navbar" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
     </nav>
     <!-- /.navbar -->
-
-    <?= $this->renderSection('content'); ?>
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container">
+          <div class="row mb-2">
+            <div class="col-2 navbar navbar-expand-md navbar-light navbar-primary text-white ">
+              <p class="m-0 text-uppercase text-break">
+                Berita Terbaru
+              </p>
+            </div>
+            <div class="col-10">
+              <h1 class="m-0 text-dark">
+                <marquee scrolldelay="100" class="navbar navbar-expand-md navbar-light navbar-secondary text-white">
+                  <?php foreach ($all as $b) : ?>
+                    <a href="/home/berita/<?= $b['id_post'] ?>" class="text-light">
+                      <img class="card-img-top" src="<?= base_url($b['icon']) ?>" style="width: 50px; height: 50px;" alt="Card image cap"> <?= $b['judul'] ?> |
+                    </a>
+                  <?php endforeach ?>
+                </marquee>
+              </h1>
+            </div>
+            <?php if (session()->getFlashdata('pesan')) :
+            ?>
+              <div class="alert alert-danger col-12" role="alert">
+                <?php session()->getFlashdata('pesan')
+                ?>
+              </div>
+            <?php endif
+            ?>
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <?= $this->renderSection('content'); ?>
+    </div>
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
       <!-- Control sidebar content goes here -->
